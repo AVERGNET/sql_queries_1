@@ -8,5 +8,3 @@ SELECT DISTINCT c.name AS name, l.no AS no
 FROM borrower b, customer c, loan l
 WHERE b.cname = c.name AND l.no = b.lno
   AND c.credit < l.minCredit
-
-  -- test
