@@ -1,8 +1,8 @@
 WITH loan_type_count AS (
-    SELECT no, type, COUNT(*) AS count
-    FROM borrower b, loan l
-    WHERE no = lno
-    GROUP BY no, type
+    SELECT l.no, l.type, COUNT(b.cname) as count
+    FROM loan l
+    LEFT JOIN borrower b ON l.no = b.lno
+    GROUP BY l.no, l.type
 ), averages_by_type AS (
     SELECT type AS type, AVG(count) AS avg
     FROM loan_type_count
