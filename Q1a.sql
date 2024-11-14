@@ -2,7 +2,8 @@
         -- Find (customer,loan) pairs where the customer no longer satisfies 
         -- the minimum credit required by the loan. The output schema 
         -- should be (name, no).
--- Handles NULL for credit
+-- Handles NULL for credit and negative credit
+-- Checked
 
 SELECT DISTINCT c.name AS name, l.no AS no
 FROM borrower b, customer c, loan l

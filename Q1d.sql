@@ -1,9 +1,13 @@
+-- Still outputs customers if they do not borrow a loan of type NULL 
+-- piazza @156
+-- https://piazza.com/class/m1jpqujznjy121/post/156
+
 SELECT name AS name
 FROM customer c
 WHERE NOT EXISTS (
     SELECT l.type
     FROM loan l
-    WHERE NOT EXISTS (
+    WHERE l.type IS NOT NULL AND NOT EXISTS (
         SELECT *
         FROM borrower b, loan l2
         WHERE l2.no = lno and name = cname and l.type = l2.type
