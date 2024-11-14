@@ -1,37 +1,31 @@
 -- Also outputs customers who have not borrowed any loans
 
-WITH customer_loan_pairs AS (
-    SELECT name, lno
-    FROM customer c, borrower b 
-    WHERE name = cname
-    UNION
-    SELECT name, 'NONE' as lno
-    FROM customer c
-    WHERE name NOT IN (SELECT cname FROM borrower)
+WITH CustomerPairs AS (
+    SELECT c1.name AS name1, c2.name AS name2
+    FROM customer c1, customer c2
 )
 
-SELECT DISTINCT c1.name as name1, c2.name as name2
-FROM customer_loan_pairs c1, customer_loan_pairs c2
-WHERE c1.name < c2.name
+SELECT DISTINCT cp.name1 AS name1, cp.name2 AS name2
+FROM CustomerPairs cp
+WHERE cp.name1 < cp.name2 
 AND NOT EXISTS (
     SELECT *
-    FROM customer_loan_pairs b1
-    WHERE b1.name = c1.name 
-    AND NOT EXISTS (
-        SELECT *
-        FROM customer_loan_pairs b2
-        WHERE b2.name = c2.name
-          AND b1.lno = b2.lno
+    FROM borrower b1
+    WHERE b1.cname = cp.name1
+    AND b1.lno NOT IN (
+        SELECT lno
+        FROM borrower b2
+        WHERE b2.cname = cp.name2
     )
 )
 AND NOT EXISTS (
     SELECT *
-    FROM customer_loan_pairs b1
-    WHERE b1.name = c2.name 
-    AND NOT EXISTS (
-        SELECT *
-        FROM customer_loan_pairs b2
-        WHERE b2.name = c1.name
-          AND b1.lno = b2.lno
+    FROM borrower b1
+    WHERE b1.cname = cp.name2
+    AND b1.lno NOT IN (
+        SELECT lno
+        FROM borrower b2
+        WHERE b2.cname = cp.name1
     )
 )
+
