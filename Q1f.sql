@@ -1,8 +1,13 @@
 -- Also outputs customers who have not borrowed any loans
 
 WITH customer_loan_pairs AS (
-    SELECT name, COALESCE(b.lno, 'NONE') as lno
-    FROM customer LEFT JOIN borrower b ON name = cname
+    SELECT name, lno
+    FROM customer c, borrower b 
+    WHERE name = cname
+    UNION
+    SELECT name, 'NONE' as lno
+    FROM customer c
+    WHERE name NOT IN (SELECT cname FROM borrower)
 )
 
 SELECT DISTINCT c1.name as name1, c2.name as name2
